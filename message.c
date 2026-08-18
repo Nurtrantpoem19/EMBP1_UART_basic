@@ -26,6 +26,18 @@ void UART_Init(unsigned int ubrr)
   UCSR0C &= ~(1 << UPM01 | 1 << UPM00);
   UCSR0C |= (1 << UPM01);
 
+  UCSR0C &= ~(1 << USBS0);
+//framing
+//
+  UCSR0C &= ~(1 << UCSZ01 | 1 << UCSZ00);
+  UCSR0B &= ~(1 << UCSZ02);
+  UCSR0C |= (1 << UCSZ01);
+
+
+  //enabling transmitter
+  UCSR0B = (1 << RXEN0); 
+
+  
 
 
   
@@ -52,4 +64,35 @@ void UART_Init(unsigned int ubrr)
 //
 // #include <avr/io.h>
 
-	}
+// // 1. Fixed macro syntax and set clock speed for ATmega2560 (typically 16 MHz)
+// #define FOSC 16000000UL 
+// #define BAUD 9600
+// #define MYUBRR (FOSC / 16 / BAUD - 1)
+//
+// // Function prototype
+// void USART0_Init(unsigned int ubrr);
+//
+// int main(void) {
+//     // Initialize USART0
+//     USART0_Init(MYUBRR);
+//
+//     while (1) {
+//         // Main loop
+//     }
+//
+//     return 0;
+// }
+//
+// void USART0_Init(unsigned int ubrr) {
+//     /* Set baud rate (USART0 uses UBRR0H and UBRR0L) */
+//     UBRR0H = (unsigned char)(ubrr >> 8);
+//     UBRR0L = (unsigned char)ubrr;
+//
+//     /* Enable receiver and transmitter */
+//     UCSR0B = (1 << RXEN0) | (1 << TXEN0);
+//
+//     /* Set frame format: 8 data bits, 2 stop bits */
+//     // Note: ATmega2560 register requires setting the URSEL bit equivalent logic
+//     // via UCSZ01 and UCSZ00 for 8-bit mode (3 << UCSZ00 sets both UCSZ01 and UCSZ00)
+//     UCSR0C = (1 << USBS0) | (3 << UCSZ00);
+// }
